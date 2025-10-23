@@ -28,6 +28,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -44,22 +45,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.example.flightsapp.authentication.viewmodel.AuthViewModel
 import com.example.flightsapp.ui.theme.AppShapes
 import com.example.flightsapp.ui.theme.AppSpacing
+import com.example.flightsapp.utils.Result
 import com.example.flightsapp.utils.WaveCanvas
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
+/**
+ * This is a composable Function, used to deal with the Login/Welcome Screen.
+ * This function has 2 arguments ,
+ * @param navToSignUp Function to Navigate to SignUp
+ * @param navOnLogonSucess Function to Navigate screens, after login its made with Sucess
+ * @return Returns a Composable Login Screen
+ * */
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navToSignUp: () -> Unit,
+    navOnLogonSucess: () -> Unit,
+    viewModel: AuthViewModel
+) {
 
     val config = LocalConfiguration.current
     val screenHeight = config.screenHeightDp.dp
     val showLogin = remember { mutableStateOf(false) }
     val waveProgress = remember { Animatable(0.5f) }
-
-
 
     Box(
         modifier = Modifier
@@ -69,8 +81,7 @@ fun LoginScreen() {
         var waveColor = MaterialTheme.colorScheme.primary
         WaveCanvas(waveProgress, screenHeight, waveColor)
         WelcomeContent(showLogin, waveProgress)
-        LoginForm(showLogin)
-
+        LoginForm(showLogin, viewModel, navOnLogonSucess)
     }
 }
 
@@ -120,10 +131,15 @@ fun WelcomeContent(showLogin: MutableState<Boolean>, waveProgress: Animatable<Fl
 }
 
 @Composable
-fun LoginForm(showLogin: MutableState<Boolean>) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
+fun LoginForm(
+    showLogin: MutableState<Boolean>,
+    viewModel: AuthViewModel,
+    onLoginSucess: () -> Unit
+) {
+    var email = remember { mutableStateOf("") }
+    var password = remember { mutableStateOf("") }
+    var isLoading = remember { mutableStateOf(false) }
+    val result by viewModel.auth.observeAsState()
 
     AnimatedVisibility(
         visible = showLogin.value,
@@ -144,52 +160,38 @@ fun LoginForm(showLogin: MutableState<Boolean>) {
                 color = MaterialTheme.colorScheme.onBackground
             )
 
+            LoginEmailTextField(email)
             Spacer(Modifier.padding(AppSpacing.M))
-
-            TextField(
-                value = email,
-                onValueChange = {
-                    email = it
-                },
-                placeholder = { Text("Email") },
-                modifier = Modifier.fillMaxWidth()
-            )
-
+            LoginPasswordTextField(password)
             Spacer(Modifier.padding(AppSpacing.S))
-            TextField(
-                value = password,
-                onValueChange = {
-                    password = it
-                },
-                placeholder = { Text("Password") },
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
-            )
+            LoginSubmitButton(
+                email = email,
+                password = password,
+                isLoading = isLoading,
+                onLoginNavigate = {},
+                checkLogin = {
+                    viewModel.login(email = email.value, password = password.value)
+                    when (result) {
+                        is Result.Loading -> {
+                            isLoading.value = true
+                        }
+
+                        is Result.Success -> {
+                            onLoginSucess()
+                        }
+
+                        is Result.Error -> {
+                            email.value = ""
+                            password.value = ""
+                        }
+
+                        else -> {
+
+                        }
+                    }
+
+                })
             Spacer(Modifier.padding(AppSpacing.M))
-            Button(
-                onClick = {
-                    isLoading = true
-                    //todo do login
-
-                    isLoading = false
-                }, modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                if (!isLoading) {
-                    Text(
-                        "Sign In",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                } else {
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp),
-                        strokeWidth = 2.dp
-                    )
-                }
-
-            }
             Spacer(Modifier.padding(AppSpacing.L))
             Text(
                 "Create an Account",
@@ -199,16 +201,77 @@ fun LoginForm(showLogin: MutableState<Boolean>) {
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
-
         }
     }
+}
 
+
+@Composable
+fun LoginEmailTextField(email: MutableState<String>) {
+    TextField(
+        value = email.value,
+        onValueChange = {
+            email.value = it
+        },
+        placeholder = { Text("Email") },
+        modifier = Modifier.fillMaxWidth()
+    )
+
+}
+
+@Composable
+fun LoginPasswordTextField(password: MutableState<String>) {
+    TextField(
+        value = password.value,
+        onValueChange = {
+            password.value = it
+        },
+        placeholder = { Text("Password") },
+        visualTransformation = PasswordVisualTransformation(),
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun LoginSubmitButton(
+    isLoading: MutableState<Boolean>,
+    email: MutableState<String>,
+    password: MutableState<String>,
+    onLoginNavigate: () -> Unit,
+    checkLogin: () -> Unit
+
+) {
+    Button(
+        onClick = {
+            isLoading.value = true
+            //todo do login
+            onLoginNavigate()
+
+            isLoading.value = false
+        }, modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        if (!isLoading.value) {
+            Text(
+                "Sign In",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        } else {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp
+            )
+        }
+
+    }
 }
 
 
 @Composable
 @Preview
 fun LoginPrev() {
-    LoginScreen()
+    // LoginScreen({}, {})
     //LoginForm()
 }

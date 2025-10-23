@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.flightsapp.authentication.viewmodel.AuthViewModel
 import com.example.flightsapp.ui.theme.AppElevation
 import com.example.flightsapp.ui.theme.AppSpacing
 import com.example.flightsapp.utils.WaveCanvas
@@ -38,7 +39,11 @@ import com.example.flightsapp.utils.WaveCanvas
 
 //TODO Add variables to hold the data, create the account, add loading status , lock textFields after clicking submit
 @Composable
-fun SignUp() {
+fun SignUpScreen(
+    navToLogin: () -> Unit,
+    navOnSignUpSucess: () -> Unit,
+    viewModel : AuthViewModel
+) {
     val waveProgress = remember { Animatable(0.5f) }
     val config = LocalConfiguration.current
     val screenHeight = config.screenHeightDp.dp
@@ -201,6 +206,6 @@ fun AlreadyHasAccountText(onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun SignUpPrev() {
-    SignUp()
+    //SignUpScreen()
     //SignUpForm()
 }
