@@ -1,13 +1,12 @@
 package com.example.flightsapp.Navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.flightsapp.authentication.view.LoginScreen
-import com.example.flightsapp.authentication.view.SignUpScreen
-import com.example.flightsapp.authentication.viewmodel.AuthViewModel
+import com.example.flightsapp.Authentication.view.LoginScreen
+import com.example.flightsapp.Authentication.view.SignUpScreen
+import com.example.flightsapp.Authentication.viewmodel.AuthViewModel
 
 @Composable
 fun NavigationGrath(

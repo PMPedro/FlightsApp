@@ -1,4 +1,4 @@
-package com.example.flightsapp.authentication.view
+package com.example.flightsapp.Authentication.view
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background
@@ -21,17 +21,15 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.flightsapp.authentication.viewmodel.AuthViewModel
+import com.example.flightsapp.Authentication.viewmodel.AuthViewModel
 import com.example.flightsapp.ui.theme.AppElevation
 import com.example.flightsapp.ui.theme.AppSpacing
 import com.example.flightsapp.utils.WaveCanvas

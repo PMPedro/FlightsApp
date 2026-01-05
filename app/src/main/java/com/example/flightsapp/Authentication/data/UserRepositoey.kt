@@ -1,7 +1,7 @@
-package com.example.flightsapp.authentication.data
+package com.example.flightsapp.Authentication.data
 
 import android.util.Log
-import com.example.flightsapp.authentication.model.User
+import com.example.flightsapp.Authentication.model.User
 import com.example.flightsapp.utils.Result
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

@@ -1,15 +1,14 @@
-package com.example.flightsapp.authentication.viewmodel
+package com.example.flightsapp.Authentication.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.flightsapp.authentication.data.UserRepository
+import com.example.flightsapp.Authentication.data.UserRepository
 import com.example.flightsapp.utils.Injection
 import com.example.flightsapp.utils.Result
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 
 
 class AuthViewModel : ViewModel() {

@@ -1,13 +1,11 @@
-package com.example.flightsapp.authentication.view
+package com.example.flightsapp.Authentication.view
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,25 +30,17 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.times
-import com.example.flightsapp.authentication.viewmodel.AuthViewModel
-import com.example.flightsapp.ui.theme.AppShapes
+import com.example.flightsapp.Authentication.viewmodel.AuthViewModel
 import com.example.flightsapp.ui.theme.AppSpacing
 import com.example.flightsapp.utils.Result
 import com.example.flightsapp.utils.WaveCanvas
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 

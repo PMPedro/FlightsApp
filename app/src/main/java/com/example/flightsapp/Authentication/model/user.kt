@@ -1,4 +1,4 @@
-package com.example.flightsapp.authentication.model
+package com.example.flightsapp.Authentication.model
 
 data class User(
     val username : String,
