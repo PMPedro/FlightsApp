@@ -1,12 +1,11 @@
 package com.example.flightsapp.MainScreen.view
 
-import android.provider.Settings.Global.getString
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,9 +28,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -45,8 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.flightsapp.Common.Flights
-import com.example.flightsapp.Common.FlightsRepository
+import com.example.flightsapp.Flight.Flights
 import com.example.flightsapp.MainScreen.viewmodel.mainPageViewModel
 import com.example.flightsapp.R
 import com.example.flightsapp.ui.theme.AppSpacing
@@ -57,16 +56,23 @@ fun MainPage(
 ) {
 
     /*TODO LIST
-    * -> User cant go back from this page
+
     * -> Fix search bar
-    * -> Show login error, when password or username fail
-    * -> Better animations for login submit button
     * -> Top/Side Menu to booked planes
     * -> Simulate Book Flight
+     *-> Show login error, when password or username fail
+    * -> Better animations for login submit button
+    * TODO
     * */
 
-    //val flights by viewModel.flights.collectAsState()
-    val flights by viewModel.filterdFlights.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadFlights()
+        viewModel.filterFlights("", "") // show all initially
+    }
+
+
+    val flights by viewModel.filterdFlights.observeAsState(emptyList())
 
 
     Column(
@@ -78,6 +84,7 @@ fun MainPage(
         var to = remember { mutableStateOf("") }
         //Spacer(modifier = Modifier.padding(AppSpacing.XL))
         TopSearchFlights(from, to, viewModel)
+        AccountRow()
         Spacer(modifier = Modifier.padding(AppSpacing.XL))
         DispFlights(flights)
     }
@@ -102,16 +109,19 @@ fun TopSearchFlights(
     ) {
         SearchFlightsTextField(
             to,
+
             stringResource(R.string.Flight_To),
             R.drawable.ic_to,
-            viewModel
+            {viewModel.onToChanged(to.value)}
         )
         Spacer(Modifier.padding(AppSpacing.S))
         SearchFlightsTextField(
             from,
+
             stringResource(R.string.Flight_From),
             R.drawable.ic_from,
-             viewModel
+            {viewModel.onFromChanged(from.value)}
+
         )
 
     }
@@ -120,8 +130,9 @@ fun TopSearchFlights(
 @Composable
 fun SearchFlightsTextField(
     fromOrTo: MutableState<String>,
+
     placeholderText: String, IconRes: Int,
-    viewModel: mainPageViewModel
+    onValueChange : (String) -> Unit
 ) {
 
     Row(
@@ -147,7 +158,7 @@ fun SearchFlightsTextField(
             Text(placeholderText)
         }, onValueChange = {
             fromOrTo.value = it
-                viewModel.filterdFlights
+                onValueChange(it)
         }, colors = TextFieldDefaults.colors(
             unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
             focusedTextColor = MaterialTheme.colorScheme.primary,
@@ -312,6 +323,29 @@ fun Ticket(
         Text(flights.price.toString() + "$",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.primary)
+    }
+}
+
+@Composable
+fun AccountRow(){
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .height(32.dp)
+        .background(color = MaterialTheme.colorScheme.secondary ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End,
+        )
+    {
+        Icon(painter = painterResource(R.drawable.account) ,
+            contentDescription = "Account",
+            tint = MaterialTheme.colorScheme.onSecondary,
+            modifier = Modifier
+                .size(32.dp)
+                .clickable{
+                    //TODO Add logic here
+                }
+
+        )
     }
 }
 

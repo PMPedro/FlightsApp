@@ -21,25 +21,30 @@ class AuthViewModel : ViewModel() {
     private val _auth = MutableLiveData<Result<Boolean>>()
     val auth: LiveData<Result<Boolean>> = _auth
 
-    fun signUp(
-        username: String,
-        password: String,
-        email: String
-    ) {
+
+    fun signUp(email: String, password: String, username: String) {
         viewModelScope.launch {
-            _auth.value = userRepo.signUp(password = password, email = email, username = username)
+            _auth.value = Result.Loading
+            val result = try {
+                userRepo.signUp(email, password, username)
+            } catch (e: Exception) {
+                Result.Error(e)
+            }
+            _auth.value = result
         }
     }
 
-    fun login(
-        email: String,
-        password: String
-    ){
+    fun login(email: String, password: String) {
         viewModelScope.launch {
-            _auth.value = userRepo.login(email = email , password = password)
+            _auth.value = Result.Loading
+            val result = try {
+                userRepo.login(email, password)
+            } catch (e: Exception) {
+                Result.Error(e)
+            }
+            _auth.value = result
         }
     }
-
-
 
 }
+

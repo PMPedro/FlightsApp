@@ -1,44 +1,73 @@
 package com.example.flightsapp.MainScreen.viewmodel
 
+import FlightRepository
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.flightsapp.Common.Flights
-import com.example.flightsapp.Common.FlightsRepository
+
+import com.example.flightsapp.Flight.Flights
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 
-class mainPageViewModel : ViewModel() {
-    private val allFlights = FlightsRepository.flights
+class mainPageViewModel (
+    private val repository: FlightRepository
+): ViewModel() {
 
-    private val _flights = MutableStateFlow(allFlights)
-    val flights: StateFlow<List<Flights>> = _flights
-    val filterdFlights : MutableStateFlow<List<Flights>> = _flights
+    private val _from = MutableStateFlow("")
+    private val _to = MutableStateFlow("")
 
 
-    fun filterFlights(airpFrom : String , airpTo : String){
+    private val _flights = MutableLiveData<List<Flights>>()
+    val flights: LiveData<List<Flights>> = _flights
+
+
+    fun loadFlights() {
+        _flights.value = repository.getFlights()
+    }
+
+    private val _filteredFlights = MutableLiveData<List<Flights>>()
+    val filterdFlights: LiveData<List<Flights>> = _filteredFlights
+
+
+
+
+    fun filterFlights(airpFrom: String, airpTo: String) {
         viewModelScope.launch {
-            val result = withContext(Dispatchers.Default){
-                allFlights.filter {
-                    flight ->
-                    when{
-                        airpFrom.isNotEmpty() && airpTo.isNotEmpty() ->
-                            flight.airportFrom.contains(airpFrom, ignoreCase = true) &&
-                                    flight.airportTo.contains(airpTo, ignoreCase = true)
-                        airpFrom.isNotEmpty() ->
-                            flight.airportFrom.contains(airpFrom, ignoreCase = true)
-                        airpTo.isNotEmpty() ->
-                            flight.airportTo.contains(airpTo, ignoreCase = true)
-                        else -> true
-                    }
+            val sourceList = _flights.value ?: emptyList()
+
+            val result = withContext(Dispatchers.Default) {
+                sourceList.filter { flight ->
+                    val matchesFrom =
+                        airpFrom.isBlank() ||
+                                flight.airportFrom.contains(airpFrom, ignoreCase = true)
+
+                    val matchesTo =
+                        airpTo.isBlank() ||
+                                flight.airportTo.contains(airpTo, ignoreCase = true)
+
+                    matchesFrom && matchesTo
                 }
             }
-            filterdFlights.value = result
-        }
 
+            _filteredFlights.value = result
+        }
     }
+
+
+    fun onFromChanged(value: String) {
+        _from.value = value
+        filterFlights(value, _to.value)
+    }
+
+    fun onToChanged(value: String) {
+        _to.value = value
+        filterFlights(_from.value, value)
+    }
+
+
 
 }

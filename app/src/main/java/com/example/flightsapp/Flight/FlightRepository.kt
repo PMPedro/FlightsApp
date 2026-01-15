@@ -1,19 +1,21 @@
-package com.example.flightsapp.FlightData
-
 import android.content.Context
+import com.example.flightsapp.Flight.Flights
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
-class FlightRepository(private val context: Context){
+class FlightRepository(private val context: Context) {
+
     fun getFlights(): List<Flights> {
-        val jsonString = context.assets
-            .open("mock_flights.json")
+
+        val jsonString = context.assets.open("mockFlight.json")
             .bufferedReader()
             .use { it.readText() }
 
+
         val gson = Gson()
-        return gson.fromJson(
-            jsonString,
-            Array<Flights>::class.java
-        ).toList()
+        val listType = object : TypeToken<List<Flights>>() {}.type
+        val flights: List<Flights> = gson.fromJson(jsonString, listType)
+
+        return flights
     }
 }

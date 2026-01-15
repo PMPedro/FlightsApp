@@ -1,5 +1,6 @@
 package com.example.flightsapp
 
+import FlightRepository
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,10 +12,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.flightsapp.Authentication.viewmodel.AuthViewModel
+
 import com.example.flightsapp.Navigation.NavigationGrath
 import com.example.flightsapp.ui.theme.FlightsAppTheme
 
@@ -32,7 +35,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     // Your app content
                     //TODO add navigation
-                    NavigationGrath(navController = navController)
+                    val context = LocalContext.current
+                    val flightRepository = FlightRepository(context)
+                    NavigationGrath(navController = navController, flightRepository = flightRepository
+                        )
                 }
             }
         }

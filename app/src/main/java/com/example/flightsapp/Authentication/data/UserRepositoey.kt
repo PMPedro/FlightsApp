@@ -9,9 +9,8 @@ import kotlinx.coroutines.tasks.await
 
 class UserRepository(private val auth: FirebaseAuth, private val firestore: FirebaseFirestore) {
 
-    suspend fun signUp(email: String, password: String, username: String): Result<Boolean> =
-        try {
-            Result.Loading
+    suspend fun signUp(email: String, password: String, username: String): Result<Boolean> {
+        return try {
             if (isUsernameTaken(username)) {
                 Result.Error(Exception("Username Already taken"))
             } else {
@@ -21,9 +20,9 @@ class UserRepository(private val auth: FirebaseAuth, private val firestore: Fire
                 Result.Success(true)
             }
         } catch (e: Exception) {
-            Log.e("UserRepository", "Signup failed", e)
             Result.Error(e)
         }
+    }
 
     private suspend fun isUsernameTaken(username: String): Boolean {
         val querySnapshot = firestore

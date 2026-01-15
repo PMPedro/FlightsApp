@@ -1,4 +1,4 @@
-    package com.example.flightsapp.FlightData
+    package com.example.flightsapp.Flight
 
     // Basic flight data class
 
