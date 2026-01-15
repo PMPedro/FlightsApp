@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -37,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,8 +56,18 @@ fun MainPage(
     viewModel: mainPageViewModel = viewModel()
 ) {
 
+    /*TODO LIST
+    * -> User cant go back from this page
+    * -> Fix search bar
+    * -> Show login error, when password or username fail
+    * -> Better animations for login submit button
+    * -> Top/Side Menu to booked planes
+    * -> Simulate Book Flight
+    * */
 
-    val flights by viewModel.flights.collectAsState()
+    //val flights by viewModel.flights.collectAsState()
+    val flights by viewModel.filterdFlights.collectAsState()
+
 
     Column(
         modifier = Modifier
@@ -65,7 +77,7 @@ fun MainPage(
         var from = remember { mutableStateOf("") }
         var to = remember { mutableStateOf("") }
         //Spacer(modifier = Modifier.padding(AppSpacing.XL))
-        TopSearchFlights(from, to)
+        TopSearchFlights(from, to, viewModel)
         Spacer(modifier = Modifier.padding(AppSpacing.XL))
         DispFlights(flights)
     }
@@ -75,7 +87,8 @@ fun MainPage(
 @Composable
 fun TopSearchFlights(
     from: MutableState<String>,
-    to: MutableState<String>
+    to: MutableState<String> ,
+    viewModel: mainPageViewModel
 
 ) {
     Column(
@@ -88,11 +101,17 @@ fun TopSearchFlights(
 
     ) {
         SearchFlightsTextField(
-            to, stringResource(R.string.Flight_To), R.drawable.ic_to
+            to,
+            stringResource(R.string.Flight_To),
+            R.drawable.ic_to,
+            viewModel
         )
         Spacer(Modifier.padding(AppSpacing.S))
         SearchFlightsTextField(
-            from, stringResource(R.string.Flight_From), R.drawable.ic_from
+            from,
+            stringResource(R.string.Flight_From),
+            R.drawable.ic_from,
+             viewModel
         )
 
     }
@@ -100,7 +119,9 @@ fun TopSearchFlights(
 
 @Composable
 fun SearchFlightsTextField(
-    fromOrTo: MutableState<String>, placeholderText: String, IconRes: Int
+    fromOrTo: MutableState<String>,
+    placeholderText: String, IconRes: Int,
+    viewModel: mainPageViewModel
 ) {
 
     Row(
@@ -126,6 +147,7 @@ fun SearchFlightsTextField(
             Text(placeholderText)
         }, onValueChange = {
             fromOrTo.value = it
+                viewModel.filterdFlights
         }, colors = TextFieldDefaults.colors(
             unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
             focusedTextColor = MaterialTheme.colorScheme.primary,
@@ -177,7 +199,12 @@ fun DispFlightItem(
     {
         Spacer(Modifier.padding(AppSpacing.S))
         AirportsRow(flights)
-        Spacer(Modifier.padding(AppSpacing.L))
+        Spacer(Modifier.padding(AppSpacing.S))
+        Airline(flights)
+        Spacer(Modifier.padding(AppSpacing.S))
+        TimeRows(flights)
+        Spacer(Modifier.padding(AppSpacing.M))
+        Ticket(flights)
 
 
     }
@@ -195,13 +222,19 @@ fun AirportsRow(
     ){
         Text(flights.airportFrom ,
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold)
+            fontWeight = FontWeight.Bold ,
+            color = MaterialTheme.colorScheme.onPrimaryContainer
+            )
 
-        Icon(painter = painterResource(R.drawable.arrow_right), contentDescription = "")
+        Icon(painter = painterResource(R.drawable.arrow_right),
+            contentDescription = "" ,
+            tint = MaterialTheme.colorScheme.primary
+            )
 
         Text(flights.airportTo ,
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold)
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onPrimaryContainer)
     }
 }
 
@@ -211,10 +244,75 @@ fun TimeRows(
 ){
     Row(   modifier = Modifier.fillMaxWidth() ,
         horizontalArrangement = Arrangement.SpaceBetween ,
-        verticalAlignment = Alignment.CenterVertically){
+        verticalAlignment = Alignment.CenterVertically)
+    {
+        Text(text = flights.departureTime.toString(),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onPrimaryContainer)
+        Row(){
+            Text(flights.duration.toString() + "H",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary)
+            Icon(painter = painterResource(R.drawable.outline_alarm_24),
+                contentDescription = "",
+                tint = MaterialTheme.colorScheme.primary)
+        }
+        Text(text = flights.arrivalTime.toString(),
+            style = MaterialTheme.typography.titleSmall ,
+            color = MaterialTheme.colorScheme.onPrimaryContainer)
     }
-    
+}
 
+@Composable
+fun Airline(
+    flights: Flights
+){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    )
+    {
+        Text(flights.airline,
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.primary)
+    }
+}
+
+@Composable
+fun Ticket(
+    flights: Flights
+){
+    Row(
+        modifier = Modifier.fillMaxWidth() ,
+        horizontalArrangement = Arrangement.SpaceBetween ,
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        Column {
+            Row {
+            Text(flights.seatsAvailable.toString(),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+                Icon(painter = painterResource(R.drawable.seat),
+                    contentDescription = "${flights.seatsAvailable} Seats Available",
+                    tint = MaterialTheme.colorScheme.onBackground)
+            }
+            val isDirect = if (flights.isDirect) "Seats Available" else "No Seats Available"
+            val isDirectColor = if (flights.isDirect) Color.Green else Color.Red
+            Text(isDirect,
+                color = isDirectColor,
+                style = MaterialTheme.typography.titleMedium)
+        }
+        Button(onClick = {
+            //TODO Book Flight
+        }) {
+            Text("Buy Ticket")
+        }
+        Text(flights.price.toString() + "$",
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.primary)
+    }
 }
 
 

@@ -37,6 +37,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.flightsapp.Authentication.viewmodel.AuthViewModel
 import com.example.flightsapp.ui.theme.AppSpacing
 import com.example.flightsapp.utils.Result
@@ -71,7 +73,7 @@ fun LoginScreen(
         var waveColor = MaterialTheme.colorScheme.primary
         WaveCanvas(waveProgress, screenHeight, waveColor)
         WelcomeContent(showLogin, waveProgress)
-        LoginForm(showLogin, viewModel, navOnLogonSucess)
+        LoginForm(showLogin, viewModel, navOnLogonSucess, navToSignUp)
     }
 }
 
@@ -124,7 +126,8 @@ fun WelcomeContent(showLogin: MutableState<Boolean>, waveProgress: Animatable<Fl
 fun LoginForm(
     showLogin: MutableState<Boolean>,
     viewModel: AuthViewModel,
-    onLoginSucess: () -> Unit
+    onLoginSucess: () -> Unit,
+    navToSignUp: () -> Unit
 ) {
     var email = remember { mutableStateOf("") }
     var password = remember { mutableStateOf("") }
@@ -186,7 +189,7 @@ fun LoginForm(
             Text(
                 "Create an Account",
                 modifier = Modifier.clickable {
-
+                    navToSignUp()
                 },
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onBackground
@@ -234,7 +237,7 @@ fun LoginSubmitButton(
     Button(
         onClick = {
             isLoading.value = true
-            //todo do login
+            checkLogin()
             onLoginNavigate()
 
             isLoading.value = false
@@ -262,6 +265,6 @@ fun LoginSubmitButton(
 @Composable
 @Preview
 fun LoginPrev() {
-    // LoginScreen({}, {})
+     //LoginScreen({}, {}, viewModel())
     //LoginForm()
 }

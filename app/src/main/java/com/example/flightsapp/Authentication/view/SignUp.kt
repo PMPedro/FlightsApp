@@ -62,8 +62,14 @@ fun SignUpScreen(
            password = password ,
            username = username ,
            isLoading = isLoading ,
-           onClickSubmitButton = {},
-           onClickAlreadyHasAccountButton = {}
+           onClickSubmitButton = {
+               viewModel.signUp(username = username.value, password = password.value, email = email.value)
+               navOnSignUpSucess()
+
+           },
+           onClickAlreadyHasAccountButton = {
+               navToLogin()
+           }
        )
     }
 

@@ -7,6 +7,8 @@ import androidx.navigation.compose.composable
 import com.example.flightsapp.Authentication.view.LoginScreen
 import com.example.flightsapp.Authentication.view.SignUpScreen
 import com.example.flightsapp.Authentication.viewmodel.AuthViewModel
+import com.example.flightsapp.MainScreen.view.MainPage
+import com.example.flightsapp.MainScreen.viewmodel.mainPageViewModel
 
 @Composable
 fun NavigationGrath(
@@ -16,11 +18,12 @@ fun NavigationGrath(
     NavHost(navController = navController, startDestination = Screens.LoginScreen.route)
     {
         val authViewModel : AuthViewModel = AuthViewModel()
+        val mainPageViewModel : mainPageViewModel = mainPageViewModel()
 
         composable(Screens.LoginScreen.route) {
             LoginScreen(
                 { navController.navigate(Screens.SignUpScreen.route) },
-                { navController.navigate(Screens.SignUpScreen.route) },  //TODO change to homeScreen, after its done
+                { navController.navigate(Screens.HomeScreen.route) },
                 viewModel = authViewModel
             )
 
@@ -28,8 +31,13 @@ fun NavigationGrath(
         composable(Screens.SignUpScreen.route) {
             SignUpScreen(
                 viewModel = authViewModel,
-                navOnSignUpSucess = {navController.navigate(Screens.SignUpScreen.route)} , //TODO change to homescreen, after its done
+                navOnSignUpSucess = {navController.navigate(Screens.HomeScreen.route)} ,
                 navToLogin = {navController.navigate(Screens.LoginScreen.route)}
+            )
+        }
+        composable(Screens.HomeScreen.route) {
+            MainPage(
+                viewModel = mainPageViewModel,
             )
         }
     }
