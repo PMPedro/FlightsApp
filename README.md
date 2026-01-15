@@ -43,11 +43,4 @@ Click the image to watch the video.
 ### Screenshots
 | Flight List | Search | Login  | Welcome | SignUp |
 |-------|---------|------------|--------| --------|
-| ![Flight List](https://github.com/user-attachments/assets/678d7021-c36c-4406-aaf8-0bb869e7471c) | ![Search](https://github.com/user-attachments/assets/4c32fefa-ddc3-448e-ac17-1d44e27dff21) | ![Login](https://github.com/user-attachments/assets/8d69954b-beee-46c8-82b3-550d496aff38) | ![Login](https://github.com/user-attachments/assets/e1228e8c-dd9d-4e93-a208-8ea30a5702a7) | ![SignUp]([https://github.com/user-attachments/assets/e1228e8c-dd9d-4e93-a208-8ea30a5702a7](https://github.com/user-attachments/assets/9dbbbe53-2a8c-4cde-aaf3-bfd57d377b27)) |
-
-*Tip:* Resize your images to ~600px width in Markdown for better readability. Use this syntax:  
-
-```markdown
-
-
-<img src="URL" width="600"/>
+| ![Flight List](https://github.com/user-attachments/assets/678d7021-c36c-4406-aaf8-0bb869e7471c) | ![Search](https://github.com/user-attachments/assets/4c32fefa-ddc3-448e-ac17-1d44e27dff21) | ![Login](https://github.com/user-attachments/assets/8d69954b-beee-46c8-82b3-550d496aff38) | ![Login](https://github.com/user-attachments/assets/e1228e8c-dd9d-4e93-a208-8ea30a5702a7) | ![SignUp]([https://github.com/user-attachments/assets/e4f665eb-caf7-4ad7-9211-05a169c3f80f] )
