@@ -29,14 +29,21 @@
 - ✅ Animated wave background  
 - ✅ Mock API for flight listing  
 - ✅ Flight search functionality  
-- ⚪ Booking simulation (planned)  
-- ⚪ Persistent user preferences (planned)  
+- ⚪ Booking simulation (planned)
+- ⚪ Finish Booking Button and Profile
+- ⚪ Persistent user preferences (planned)
+  
 
 ---
 
+## Feature Status & Roadmap
 
+The application currently focuses on the flight search and exploration experience.
 
+Some UI elements (such as the **“Book Now” button** and the **profile/bookings section**)
+are part of the planned architecture and currently act as placeholders.
 
+---
 
 
 
