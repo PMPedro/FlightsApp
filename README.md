@@ -34,7 +34,10 @@
 
 ---
 
-https://github.com/user-attachments/assets/7b688fde-1c48-4dac-874e-12af6159d2cf
+
+
+
+
 
 
 
@@ -42,7 +45,7 @@ https://github.com/user-attachments/assets/7b688fde-1c48-4dac-874e-12af6159d2cf
 
 ## Demo Video
 
-https://github.com/user-attachments/assets/7b688fde-1c48-4dac-874e-12af6159d2cf
+https://github.com/user-attachments/assets/ce5df8c8-f675-4061-b4a2-feae5497435a
 
 
 ### Screenshots
