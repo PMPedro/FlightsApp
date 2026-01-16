@@ -34,15 +34,16 @@
 
 ---
 
-
+https://github.com/user-attachments/assets/7b688fde-1c48-4dac-874e-12af6159d2cf
 
 
 
 ## 📸 Screenshots & Demo
 
-### Demo Video
-[![Watch Demo]([https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://youtu.be/YOUR_VIDEO_ID](https://github.com/user-attachments/assets/7b688fde-1c48-4dac-874e-12af6159d2cf))  
-Click the image to watch the video.
+## Demo Video
+
+https://github.com/user-attachments/assets/7b688fde-1c48-4dac-874e-12af6159d2cf
+
 
 ### Screenshots
 | Flight List | Search | Login  | Welcome | SignUp |
